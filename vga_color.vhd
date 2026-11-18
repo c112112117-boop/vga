@@ -19,20 +19,22 @@ architecture Behavioral of vga_color is
 begin
 
     process(pixel_x, pixel_y, video_on)
-        variable x : integer;
-        variable y : integer;
+        variable x  : integer;
+        variable y  : integer;
+        variable dx : integer;
     begin
         x := to_integer(unsigned(pixel_x));
         y := to_integer(unsigned(pixel_y));
+        dx := abs(x - 515);
 
-        -- Default: black
+        -- 預設背景為黑色
         r_out <= "0000";
         g_out <= "0000";
         b_out <= "0000";
 
         if video_on = '1' then
 
-            -- Red rectangle
+            -- 左邊：紅色正方形
             if x >= 50 and x < 200 and
                y >= 150 and y < 300 then
 
@@ -40,17 +42,17 @@ begin
                 g_out <= "0000";
                 b_out <= "0000";
 
-            -- Green rectangle
-            elsif x >= 245 and x < 395 and
-                  y >= 150 and y < 300 then
+            -- 中間：綠色圓形
+            elsif ((x - 320) * (x - 320) +
+                   (y - 225) * (y - 225)) <= (75 * 75) then
 
                 r_out <= "0000";
                 g_out <= "1111";
                 b_out <= "0000";
 
-            -- Blue rectangle
-            elsif x >= 440 and x < 590 and
-                  y >= 150 and y < 300 then
+            -- 右邊：藍色三角形
+            elsif y >= 150 and y < 300 and
+                  (2 * dx) <= (y - 150) then
 
                 r_out <= "0000";
                 g_out <= "0000";
